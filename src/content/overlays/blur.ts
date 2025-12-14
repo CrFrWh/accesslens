@@ -16,7 +16,7 @@ function restoreOriginalFilter() {
 }
 
 export function setBlurOverlay(enabled: boolean, intensityPx = 2) {
-  if (enabled) {
+  if (enabled && intensityPx > 0) {
     rememberOriginalFilter();
     HTML.style.filter = `blur(${intensityPx}px)`;
   } else {
