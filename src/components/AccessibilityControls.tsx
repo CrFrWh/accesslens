@@ -23,7 +23,7 @@ export default function AccessibilityControls() {
               chrome.runtime.lastError.message
             );
           } else {
-            //set blur
+            //Blur message sent successfully
           }
         }
       );
