@@ -1,25 +1,39 @@
-const HTML = document.documentElement;
+let blurOverlay: HTMLDivElement | null = null;
 
-function rememberOriginalFilter() {
-  if (!HTML.dataset.accesslensOriginalFilter) {
-    HTML.dataset.accesslensOriginalFilter = HTML.style.filter || "";
-  }
+/**
+ * Create or return the blur overlay element
+ * @param blurPx - The amount of blur in pixels
+ * @return The blur overlay element
+ */
+
+export function ensureBlurOverlay(): HTMLDivElement {
+  if (blurOverlay) return blurOverlay;
+
+  console.log("Creating blur overlay");
+
+  blurOverlay = document.createElement("div");
+  blurOverlay.id = "accesslens-blur-overlay";
+  blurOverlay.style.cssText = `
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2147483646;
+    backdrop-filter: blur(0px);
+    visibility: hidden;
+  `;
+
+  document.body.appendChild(blurOverlay);
+  return blurOverlay;
 }
 
-function restoreOriginalFilter() {
-  if ("accesslensOriginalFilter" in HTML.dataset) {
-    HTML.style.filter = HTML.dataset.accesslensOriginalFilter || "";
-    delete HTML.dataset.accesslensOriginalFilter;
-  } else {
-    HTML.style.filter = "";
-  }
-}
+/**
+ * Set the blur amount in px
+ * When px is 0, remove the overlay
+ */
 
-export function setBlurOverlay(enabled: boolean, intensityPx = 2) {
-  if (enabled && intensityPx > 0) {
-    rememberOriginalFilter();
-    HTML.style.filter = `blur(${intensityPx}px)`;
-  } else {
-    restoreOriginalFilter();
-  }
+export function setBlurAmount(blurPx: number): void {
+  const overlay = ensureBlurOverlay();
+
+  overlay.style.backdropFilter = blurPx > 0 ? `blur(${blurPx}px)` : "none";
+  overlay.style.visibility = blurPx > 0 ? "visible" : "hidden";
 }

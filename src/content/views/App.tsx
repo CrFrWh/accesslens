@@ -1,16 +1,10 @@
 import Logo from "@/assets/crx.svg";
 import { useEffect, useState } from "react";
-import { setBlurOverlay } from "../overlays/blur";
 import "./App.css";
 
 function App() {
   const [show, setShow] = useState(false);
   const toggle = () => setShow(!show);
-
-  useEffect(() => {
-    setBlurOverlay(show, 2);
-    return () => setBlurOverlay(false, 0);
-  }, [show]);
 
   return (
     <div className="popup-container">
