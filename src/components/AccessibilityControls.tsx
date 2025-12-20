@@ -1,24 +1,44 @@
 import { useEffect, useState } from "react";
 import LowVisionControls from "./LowVisionControls";
 import BlindnessControls from "./BlindnessControls";
+import CVDControls from "./CVDControls";
+
+type CvdMode =
+  | "none"
+  | "protanopia"
+  | "deuteranopia"
+  | "tritanopia"
+  | "monochromacy";
 
 export default function AccessibilityControls() {
   const [blurPx, setBlurPx] = useState(0);
   const [blindnessEnabled, setBlindnessEnabled] = useState(false);
   const [blindnessHint, setBlindnessHint] = useState(true);
+  const [cvdMode, setCvdMode] = useState<CvdMode>("none");
+  const [cvdIntensity, setCvdIntensity] = useState(100);
 
   // Load initial settings from storage
   useEffect(() => {
     if (!chrome?.storage?.onChanged) return;
 
     chrome.storage.sync
-      .get(["blurPx", "blindnessEnabled", "blindnessHint"])
+      .get([
+        "blurPx",
+        "blindnessEnabled",
+        "blindnessHint",
+        "cvdMode",
+        "cvdIntensity",
+      ])
       .then((result) => {
         if (typeof result.blurPx === "number") setBlurPx(result.blurPx);
         if (typeof result.blindnessEnabled === "boolean")
           setBlindnessEnabled(result.blindnessEnabled);
         if (typeof result.blindnessHint === "boolean")
           setBlindnessHint(result.blindnessHint);
+        if (typeof result.cvdMode === "string")
+          setCvdMode(result.cvdMode as CvdMode);
+        if (typeof result.cvdIntensity === "number")
+          setCvdIntensity(result.cvdIntensity);
       });
   }, []);
 
@@ -78,10 +98,32 @@ export default function AccessibilityControls() {
     });
   }, [blindnessEnabled, blindnessHint]);
 
+  // CVD
+  useEffect(() => {
+    if (chrome?.storage?.sync)
+      chrome.storage.sync
+        .set({
+          cvdMode,
+          cvdIntensity,
+        })
+        .catch?.(() => {});
+    sendToActiveTab({
+      type: "ACCESSLENS_SET_CVD",
+      payload: { mode: cvdMode, intensity: cvdIntensity },
+    });
+  }, [cvdMode, cvdIntensity]);
+
   return (
     <div>
       <h1>Accessibility Controls</h1>
       <LowVisionControls blurValue={blurPx} onBlurChange={setBlurPx} />
+
+      <CVDControls
+        mode={cvdMode}
+        intensity={cvdIntensity}
+        onModeChange={setCvdMode}
+        onIntensityChange={setCvdIntensity}
+      />
 
       <BlindnessControls
         enabled={blindnessEnabled}
