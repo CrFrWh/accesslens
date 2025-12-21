@@ -74,6 +74,28 @@ export default function AccessibilityControls() {
         const v = changes.blurPx.newValue;
         setBlurPx(typeof v === "number" ? v : 0);
       }
+      if (changes.cvdMode) {
+        const v = changes.cvdMode.newValue;
+        if (typeof v === "string") setCvdMode(v as CvdMode);
+      }
+      if (changes.cvdIntensity) {
+        const v = changes.cvdIntensity.newValue;
+        if (typeof v === "number") setCvdIntensity(v);
+      }
+      if (changes.letterSpacingPx) {
+        const v = changes.letterSpacingPx.newValue;
+        if (typeof v === "number") setLetterSpacingPx(v);
+      }
+      if (changes.lineHeight) {
+        const v = changes.lineHeight.newValue;
+        if (typeof v === "number") setLineHeight(v);
+      }
+      if (changes.jitterEnabled) {
+        setJitterEnabled(!!changes.jitterEnabled.newValue);
+      }
+      if (changes.densityEnabled) {
+        setDensityEnabled(!!changes.densityEnabled.newValue);
+      }
     };
     chrome.storage.onChanged.addListener(onChanged);
     return () => {
@@ -105,6 +127,10 @@ export default function AccessibilityControls() {
   }, [blurPx]);
 
   useEffect(() => {
+    if (chrome?.storage?.sync)
+      chrome.storage.sync
+        .set({ blindnessEnabled, blindnessHint })
+        .catch?.(() => {});
     sendToActiveTab({
       type: "ACCESSLENS_SET_BLINDNESS",
       payload: {
@@ -130,8 +156,17 @@ export default function AccessibilityControls() {
     });
   }, [cvdMode, cvdIntensity]);
 
-  //Cognitive
+  // Cognitive
   useEffect(() => {
+    if (chrome?.storage?.sync)
+      chrome.storage.sync
+        .set({
+          letterSpacingPx,
+          lineHeight,
+          jitterEnabled,
+          densityEnabled,
+        })
+        .catch?.(() => {});
     sendToActiveTab({
       type: "ACCESSLENS_SET_COGNITIVE",
       payload: {
