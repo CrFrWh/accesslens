@@ -9,7 +9,7 @@
     different types of color blindness.
 */
 
-type CvdMode =
+export type CvdMode =
   | "none"
   | "protanopia"
   | "deuteranopia"
@@ -21,21 +21,21 @@ let matrixEl: SVGFEColorMatrixElement | null = null;
 const ID_FILTER = "accesslens-cvd-filter";
 const ID_SVG = "accesslens-cvd-svg";
 
-//identity matrix for no color transformation
 const identity = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0];
 
-//matrices for different types of color vision deficiency
+// More accurate CVD simulation matrices (Brettel/Viénot)
 const matrices: Record<Exclude<CvdMode, "none">, number[]> = {
   protanopia: [
-    0.567, 0.433, 0, 0, 0, 0.558, 0.442, 0, 0, 0, 0, 0.242, 0.758, 0, 0, 0, 0,
-    0, 1, 0,
+    0.152286, 1.052583, -0.204868, 0, 0, 0.114503, 0.786281, 0.099216, 0, 0,
+    -0.003882, -0.048116, 1.051998, 0, 0, 0, 0, 0, 1, 0,
   ],
   deuteranopia: [
-    0.625, 0.375, 0, 0, 0, 0.7, 0.3, 0, 0, 0, 0, 0.3, 0.7, 0, 0, 0, 0, 0, 1, 0,
+    0.367322, 0.860646, -0.227968, 0, 0, 0.280085, 0.672501, 0.047413, 0, 0,
+    -0.01182, 0.04294, 0.968881, 0, 0, 0, 0, 0, 1, 0,
   ],
   tritanopia: [
-    0.95, 0.05, 0, 0, 0, 0, 0.433, 0.567, 0, 0, 0, 0.475, 0.525, 0, 0, 0, 0, 0,
-    1, 0,
+    1.255528, -0.076749, -0.178779, 0, 0, -0.078411, 0.930809, 0.147602, 0, 0,
+    0.004733, 0.691367, 0.3039, 0, 0, 0, 0, 0, 1, 0,
   ],
   monochromacy: [
     0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114, 0, 0, 0.299, 0.587, 0.114,
@@ -43,14 +43,10 @@ const matrices: Record<Exclude<CvdMode, "none">, number[]> = {
   ],
 };
 
-//mixMatrix linearly interpolates between identity and target matrix based on intensity (0 to 1)
-function mixMatrix(target: number[], intensity: number): number[] {
-  return identity.map(
-    (val, i) => val * (1 - intensity) + target[i] * intensity
-  );
+function mixMatrix(target: number[], t: number): number[] {
+  return identity.map((idVal, i) => idVal + (target[i] - idVal) * t);
 }
 
-//ensureFilter creates or returns the existing SVG filter and feColorMatrix element
 function ensureFilter(): SVGFEColorMatrixElement {
   if (matrixEl) return matrixEl;
 
@@ -58,11 +54,8 @@ function ensureFilter(): SVGFEColorMatrixElement {
   svgEl.setAttribute("id", ID_SVG);
   svgEl.setAttribute("width", "0");
   svgEl.setAttribute("height", "0");
-  svgEl.style.position = "fixed";
-  svgEl.style.width = "0";
-  svgEl.style.height = "0";
-  svgEl.style.pointerEvents = "none";
-  svgEl.style.zIndex = "-1";
+  svgEl.style.cssText =
+    "position: fixed; width: 0; height: 0; pointer-events: none; z-index: -1;";
 
   const filter = document.createElementNS(
     "http://www.w3.org/2000/svg",
@@ -84,21 +77,28 @@ function ensureFilter(): SVGFEColorMatrixElement {
   return matrixEl;
 }
 
-/**
- * Apply a CVD simulation with adjustable intensity (0–100).
- * Mode "none" or intensity 0 clears the filter.
- */
-export function setCvdMode(mode: CvdMode, intensity: number): void {
-  const t = Math.max(0, Math.min(1, intensity)); //clamp intensity to [0, 1]
+/** Apply a CVD simulation with adjustable intensityPct (0–100). */
+export function setCvdMode(mode: CvdMode, intensityPct: number): void {
+  const t = Math.max(0, Math.min(100, intensityPct)) / 100;
 
   if (mode === "none" || t === 0) {
     document.documentElement.style.filter = "";
     return;
   }
 
-  const target = matrices[mode] ?? identity;
+  const target = matrices[mode];
+  if (!target) {
+    document.documentElement.style.filter = "";
+    return;
+  }
+
   const mixed = mixMatrix(target, t);
-  const matrixEl = ensureFilter();
-  matrixEl.setAttribute("values", mixed.join(" "));
-  document.documentElement.style.filter = `url(#${ID_FILTER})`;
+  const m = ensureFilter();
+
+  // Force the browser to pick up the change
+  document.documentElement.style.filter = "";
+  m.setAttribute("values", mixed.join(" "));
+  requestAnimationFrame(() => {
+    document.documentElement.style.filter = `url("#${ID_FILTER}")`;
+  });
 }
