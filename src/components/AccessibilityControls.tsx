@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import LowVisionControls from "./LowVisionControls";
 import BlindnessControls from "./BlindnessControls";
 import CVDControls from "./CVDControls";
+import CognitiveControls from "./CognitiveControls";
 
 type CvdMode =
   | "none"
@@ -16,6 +17,10 @@ export default function AccessibilityControls() {
   const [blindnessHint, setBlindnessHint] = useState(true);
   const [cvdMode, setCvdMode] = useState<CvdMode>("none");
   const [cvdIntensity, setCvdIntensity] = useState(100);
+  const [letterSpacingPx, setLetterSpacingPx] = useState(0);
+  const [lineHeight, setLineHeight] = useState(1.5);
+  const [jitterEnabled, setJitterEnabled] = useState(false);
+  const [densityEnabled, setDensityEnabled] = useState(false);
 
   // Load initial settings from storage
   useEffect(() => {
@@ -28,6 +33,10 @@ export default function AccessibilityControls() {
         "blindnessHint",
         "cvdMode",
         "cvdIntensity",
+        "letterSpacingPx",
+        "lineHeight",
+        "jitterEnabled",
+        "densityEnabled",
       ])
       .then((result) => {
         if (typeof result.blurPx === "number") setBlurPx(result.blurPx);
@@ -39,6 +48,14 @@ export default function AccessibilityControls() {
           setCvdMode(result.cvdMode as CvdMode);
         if (typeof result.cvdIntensity === "number")
           setCvdIntensity(result.cvdIntensity);
+        if (typeof result.letterSpacingPx === "number")
+          setLetterSpacingPx(result.letterSpacingPx);
+        if (typeof result.lineHeight === "number")
+          setLineHeight(result.lineHeight);
+        if (typeof result.jitterEnabled === "boolean")
+          setJitterEnabled(result.jitterEnabled);
+        if (typeof result.densityEnabled === "boolean")
+          setDensityEnabled(result.densityEnabled);
       });
   }, []);
 
@@ -113,6 +130,19 @@ export default function AccessibilityControls() {
     });
   }, [cvdMode, cvdIntensity]);
 
+  //Cognitive
+  useEffect(() => {
+    sendToActiveTab({
+      type: "ACCESSLENS_SET_COGNITIVE",
+      payload: {
+        letterSpacingPx,
+        lineHeight,
+        jitterEnabled,
+        densityEnabled,
+      },
+    });
+  }, [letterSpacingPx, lineHeight, jitterEnabled, densityEnabled]);
+
   return (
     <div>
       <h1>Accessibility Controls</h1>
@@ -130,6 +160,17 @@ export default function AccessibilityControls() {
         showHint={blindnessHint}
         onEnabledChange={setBlindnessEnabled}
         onShowHintChange={setBlindnessHint}
+      />
+
+      <CognitiveControls
+        letterSpacingPx={letterSpacingPx}
+        lineHeight={lineHeight}
+        jitterEnabled={jitterEnabled}
+        densityEnabled={densityEnabled}
+        onLetterSpacingChange={setLetterSpacingPx}
+        onLineHeightChange={setLineHeight}
+        onJitterChange={setJitterEnabled}
+        onDensityChange={setDensityEnabled}
       />
     </div>
   );
