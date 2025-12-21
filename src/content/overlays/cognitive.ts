@@ -24,8 +24,8 @@ export function applyCognitiveStyles(options: CognitiveOptions) {
     `${options.letterSpacingPx}px`
   );
   root.style.setProperty("--accesslens-line-height", `${options.lineHeight}`);
-  root.style.setProperty("data-accesslens-jitter", String(options.jitter));
-  root.style.setProperty("data-accesslens-density", String(options.density));
+  root.setAttribute("data-accesslens-jitter", String(options.jitter));
+  root.setAttribute("data-accesslens-density", String(options.density));
 
   styleEl!.textContent = `
     :root {
