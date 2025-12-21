@@ -1,5 +1,6 @@
 import { ensureBlindnessCurtain, setBlindnessMode } from "./overlays/blindness";
 import { setBlurAmount } from "./overlays/blur";
+import { applyCognitiveStyles } from "./overlays/cognitive";
 import { setCvdMode, type CvdMode } from "./overlays/cvd";
 
 export function setupMessageListener(): void {
@@ -39,6 +40,27 @@ export function setupMessageListener(): void {
             ? message.payload.intensity
             : 100;
         setCvdMode(mode, intensity);
+        sendResponse({ success: true });
+        break;
+      }
+
+      case "ACCESSLENS_SET_COGNITIVE": {
+        const letterSpacingPx =
+          typeof message.payload?.letterSpacingPx === "number"
+            ? message.payload.letterSpacingPx
+            : 0;
+        const lineHeight =
+          typeof message.payload?.lineHeight === "number"
+            ? message.payload.lineHeight
+            : 1.5;
+        const jitter = !!message.payload?.jitterEnabled;
+        const density = !!message.payload?.densityEnabled;
+        applyCognitiveStyles({
+          letterSpacingPx,
+          lineHeight,
+          jitter,
+          density,
+        });
         sendResponse({ success: true });
         break;
       }
