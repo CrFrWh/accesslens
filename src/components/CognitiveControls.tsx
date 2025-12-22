@@ -5,6 +5,7 @@ Optional word jitter toggle: Mild visual jitter (visual only, non-functional)
 Info density highlighter toggle: Highlight CTAs and text-dense regions with a subtle background
 Layout: Stack sliders vertically; show live preview of spacing changes
 */
+import styles from "./CognitiveControls.module.css";
 
 export default function CognitiveControls(props: {
   letterSpacingPx: number;
@@ -17,14 +18,19 @@ export default function CognitiveControls(props: {
   onDensityChange: (enabled: boolean) => void;
 }) {
   return (
-    <section>
-      <h2>Cognitive Controls</h2>
-      <p>Controls for letter spacing, line height, jitter, and density.</p>
+    <section className={styles.cognitiveContainer}>
+      <h2 className={styles.title}>Cognitive Controls</h2>
+      <p className={styles.description}>
+        Controls for letter spacing, line height, jitter, and density.
+      </p>
 
-      <label style={{ display: "grid", gap: "0.35rem" }}>
-        <span>Letter Spacing: {props.letterSpacingPx.toFixed(1)}px</span>
+      <label className={styles.sliderContainer}>
+        <span className={styles.sliderLabel}>
+          Letter Spacing: {props.letterSpacingPx.toFixed(1)}px
+        </span>
         <input
           type="range"
+          className={styles.slider}
           min={0}
           max={15}
           step={0.1}
@@ -32,10 +38,13 @@ export default function CognitiveControls(props: {
           onChange={(e) => props.onLetterSpacingChange(Number(e.target.value))}
         />
       </label>
-      <label style={{ display: "grid", gap: "0.35rem" }}>
-        <span>Line Height: {props.lineHeight.toFixed(1)}px</span>
+      <label className={styles.sliderContainer}>
+        <span className={styles.sliderLabel}>
+          Line Height: {props.lineHeight.toFixed(1)}px
+        </span>
         <input
           type="range"
+          className={styles.slider}
           min={0}
           max={15}
           step={0.1}
@@ -43,7 +52,7 @@ export default function CognitiveControls(props: {
           onChange={(e) => props.onLineHeightChange(Number(e.target.value))}
         />
       </label>
-      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <label className={styles.checkboxLabel}>
         <input
           type="checkbox"
           checked={props.jitterEnabled}
@@ -51,7 +60,7 @@ export default function CognitiveControls(props: {
         />
         Enable Word Jitter
       </label>
-      <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      <label className={styles.checkboxLabel}>
         <input
           type="checkbox"
           checked={props.densityEnabled}

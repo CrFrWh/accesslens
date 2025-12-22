@@ -3,6 +3,7 @@ import LowVisionControls from "./LowVisionControls";
 import BlindnessControls from "./BlindnessControls";
 import CVDControls from "./CVDControls";
 import CognitiveControls from "./CognitiveControls";
+import styles from "./AccessibilityControls.module.css";
 
 type CvdMode =
   | "none"
@@ -179,8 +180,8 @@ export default function AccessibilityControls() {
   }, [letterSpacingPx, lineHeight, jitterEnabled, densityEnabled]);
 
   return (
-    <div>
-      <h1>Accessibility Controls</h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Accessibility Controls</h1>
       <LowVisionControls blurValue={blurPx} onBlurChange={setBlurPx} />
 
       <CVDControls

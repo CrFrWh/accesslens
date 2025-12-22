@@ -1,0 +1,42 @@
+.cognitiveContainer {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.sliderContainer {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.sliderLabel {
+  font-weight: 500;
+}
+
+.slider {
+  width: 100%;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.checkboxLabel:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 0.25rem;
+  margin: -0.25rem -0.25rem 0.25rem -0.25rem;
+  border-radius: 0.25rem;
+}

@@ -4,6 +4,7 @@ Radio buttons or segmented control (mutually exclusive):
 None / Protanopia (red-blind) / Deuteranopia (green-blind) / Tritanopia (blue-blind) / Monochromacy (grayscale)
 Intensity slider (0–100%) if you want partial saturation/mixing
 */
+import styles from "./CVDControls.module.css";
 
 type CvdMode =
   | "none"
@@ -26,16 +27,13 @@ export default function CVDControls(props: {
     { label: "Monochromacy", value: "monochromacy" },
   ];
   return (
-    <section>
-      <h2>Color Vision Deficiency (CVD) Controls</h2>
+    <section className={styles.cvdContainer}>
+      <h2 className={styles.title}>Color Vision Deficiency (CVD) Controls</h2>
 
-      <div style={{ display: "grid", gap: "0.5rem", marginBottom: "1rem" }}>
-        <div style={{ display: "grid", gap: "0.25rem" }}>
+      <div className={styles.controlsWrapper}>
+        <div className={styles.radioGroup}>
           {options.map((option) => (
-            <label
-              key={option.value}
-              style={{ display: "flex", alignItems: "center", gap: 8 }}
-            >
+            <label key={option.value} className={styles.radioLabel}>
               <input
                 type="radio"
                 name="cvd-mode"
@@ -48,10 +46,13 @@ export default function CVDControls(props: {
           ))}
         </div>
 
-        <label style={{ display: "grid", gap: "0.35rem" }}>
-          <span>Intensity: {props.intensity.toFixed(0)}%</span>
+        <label className={styles.sliderContainer}>
+          <span className={styles.sliderLabel}>
+            Intensity: {props.intensity.toFixed(0)}%
+          </span>
           <input
             type="range"
+            className={styles.slider}
             min={0}
             max={100}
             step={1}
