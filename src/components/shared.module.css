@@ -1,0 +1,175 @@
+/* Shared styling for all accessibility controls */
+
+/* Section Container */
+.section {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sectionLast {
+  margin-bottom: 0;
+}
+
+/* Typography */
+.sectionTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+@media (prefers-color-scheme: light) {
+  .sectionTitle {
+    color: #213547;
+  }
+}
+
+.description {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  .description {
+    color: #555;
+  }
+}
+
+/* Field Layout */
+.field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.fieldLabel {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+@media (prefers-color-scheme: light) {
+  .fieldLabel {
+    color: #213547;
+  }
+}
+
+/* Range/Slider Container */
+.sliderWrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.slider {
+  width: 100%;
+  cursor: pointer;
+}
+
+.sliderValue {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  white-space: nowrap;
+  min-width: 3rem;
+  text-align: right;
+}
+
+@media (prefers-color-scheme: light) {
+  .sliderValue {
+    color: #555;
+  }
+}
+
+/* Checkbox Group */
+.checkboxGroup {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+  user-select: none;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+@media (prefers-color-scheme: light) {
+  .checkboxLabel {
+    color: #213547;
+  }
+}
+
+.checkboxLabel:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: light) {
+  .checkboxLabel:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.checkboxLabel input[type="checkbox"] {
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Radio Group */
+.radioGroup {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.15s ease;
+  user-select: none;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+@media (prefers-color-scheme: light) {
+  .radioLabel {
+    color: #213547;
+  }
+}
+
+.radioLabel:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-color-scheme: light) {
+  .radioLabel:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+}
+
+.radioLabel input[type="radio"] {
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Output/Display Value */
+output {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (prefers-color-scheme: light) {
+  output {
+    color: #555;
+  }
+}

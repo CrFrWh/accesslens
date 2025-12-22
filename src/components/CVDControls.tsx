@@ -4,7 +4,7 @@ Radio buttons or segmented control (mutually exclusive):
 None / Protanopia (red-blind) / Deuteranopia (green-blind) / Tritanopia (blue-blind) / Monochromacy (grayscale)
 Intensity slider (0–100%) if you want partial saturation/mixing
 */
-import styles from "./CVDControls.module.css";
+import styles from "./shared.module.css";
 
 type CvdMode =
   | "none"
@@ -27,39 +27,40 @@ export default function CVDControls(props: {
     { label: "Monochromacy", value: "monochromacy" },
   ];
   return (
-    <section className={styles.cvdContainer}>
-      <h2 className={styles.title}>Color Vision Deficiency (CVD) Controls</h2>
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>
+        Color Vision Deficiency (CVD) Controls
+      </h2>
 
-      <div className={styles.controlsWrapper}>
-        <div className={styles.radioGroup}>
-          {options.map((option) => (
-            <label key={option.value} className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="cvd-mode"
-                value={option.value}
-                checked={props.mode === option.value}
-                onChange={() => props.onModeChange(option.value)}
-              />
-              {option.label}
-            </label>
-          ))}
-        </div>
+      <div className={styles.radioGroup}>
+        {options.map((option) => (
+          <label key={option.value} className={styles.radioLabel}>
+            <input
+              type="radio"
+              name="cvd-mode"
+              value={option.value}
+              checked={props.mode === option.value}
+              onChange={() => props.onModeChange(option.value)}
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
 
-        <label className={styles.sliderContainer}>
-          <span className={styles.sliderLabel}>
-            Intensity: {props.intensity.toFixed(0)}%
-          </span>
-          <input
-            type="range"
-            className={styles.slider}
-            min={0}
-            max={100}
-            step={1}
-            value={props.intensity}
-            onChange={(e) => props.onIntensityChange(Number(e.target.value))}
-          />
+      <div className={styles.field}>
+        <label htmlFor="cvd-intensity" className={styles.fieldLabel}>
+          Intensity: {props.intensity.toFixed(0)}%
         </label>
+        <input
+          id="cvd-intensity"
+          type="range"
+          className={styles.slider}
+          min={0}
+          max={100}
+          step={1}
+          value={props.intensity}
+          onChange={(e) => props.onIntensityChange(Number(e.target.value))}
+        />
       </div>
     </section>
   );

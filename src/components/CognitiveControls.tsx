@@ -5,7 +5,7 @@ Optional word jitter toggle: Mild visual jitter (visual only, non-functional)
 Info density highlighter toggle: Highlight CTAs and text-dense regions with a subtle background
 Layout: Stack sliders vertically; show live preview of spacing changes
 */
-import styles from "./CognitiveControls.module.css";
+import styles from "./shared.module.css";
 
 export default function CognitiveControls(props: {
   letterSpacingPx: number;
@@ -18,16 +18,19 @@ export default function CognitiveControls(props: {
   onDensityChange: (enabled: boolean) => void;
 }) {
   return (
-    <section className={styles.cognitiveContainer}>
-      <h2 className={styles.title}>Cognitive Controls</h2>
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>Cognitive Controls</h2>
       <p className={styles.description}>
         Controls for letter spacing, line height, jitter, and density.
       </p>
 
       <div className={styles.field}>
-        <span className={styles.sliderLabel}>Letter Spacing:</span>
-        <div className={styles.sliderContainer}>
+        <label htmlFor="letter-spacing" className={styles.fieldLabel}>
+          Letter Spacing
+        </label>
+        <div className={styles.sliderWrapper}>
           <input
+            id="letter-spacing"
             type="range"
             className={styles.slider}
             min={0}
@@ -38,26 +41,34 @@ export default function CognitiveControls(props: {
               props.onLetterSpacingChange(Number(e.target.value))
             }
           />
-          <output>{props.lineHeight.toFixed(1)}px</output>
+          <output className={styles.sliderValue}>
+            {props.letterSpacingPx.toFixed(1)}px
+          </output>
         </div>
       </div>
+
       <div className={styles.field}>
-        <span className={styles.sliderLabel}>Line Height:</span>
-        <div className={styles.sliderContainer}>
+        <label htmlFor="line-height" className={styles.fieldLabel}>
+          Line Height
+        </label>
+        <div className={styles.sliderWrapper}>
           <input
+            id="line-height"
             type="range"
             className={styles.slider}
-            min={0}
-            max={15}
+            min={1}
+            max={2.5}
             step={0.1}
             value={props.lineHeight}
             onChange={(e) => props.onLineHeightChange(Number(e.target.value))}
           />
-          <output>{props.lineHeight.toFixed(1)}px</output>
+          <output className={styles.sliderValue}>
+            {props.lineHeight.toFixed(2)}
+          </output>
         </div>
       </div>
 
-      <div className={styles.checkboxContainer}>
+      <div className={styles.checkboxGroup}>
         <label className={styles.checkboxLabel}>
           <input
             type="checkbox"

@@ -1,4 +1,4 @@
-import styles from "./LowVisionControls.module.css";
+import styles from "./shared.module.css";
 
 export default function LowVisionControls(props: {
   blurValue: number;
@@ -12,24 +12,27 @@ export default function LowVisionControls(props: {
   };
 
   return (
-    <section className={`${styles.lowVisionContainer}`}>
-      <h2 className={`${styles.title}`}>Low Vision Controls</h2>
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>Low Vision Controls</h2>
 
       <div className={styles.field}>
-        <label htmlFor="intensity">Blur Intensity</label>
-        <div className={styles.rangeGroup}>
+        <label htmlFor="blur-intensity" className={styles.fieldLabel}>
+          Blur Intensity
+        </label>
+        <div className={styles.sliderWrapper}>
           <input
-            id="intensity"
+            id="blur-intensity"
             type="range"
             min={0}
             max={10}
             step={0.1}
             value={props.blurValue}
+            className={styles.slider}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               props.onBlurChange(Number(e.target.value))
             }
           />
-          <output>
+          <output className={styles.sliderValue}>
             {props.blurValue.toFixed(1)}px {getLabel(props.blurValue)}
           </output>
         </div>

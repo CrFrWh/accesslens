@@ -181,7 +181,7 @@ export default function AccessibilityControls() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Accessibility Controls</h1>
+      <h1 className={styles.mainTitle}>Accessibility Controls</h1>
       <LowVisionControls blurValue={blurPx} onBlurChange={setBlurPx} />
 
       <CVDControls

@@ -1,5 +1,5 @@
 import Logo from "@/assets/crx.svg";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
