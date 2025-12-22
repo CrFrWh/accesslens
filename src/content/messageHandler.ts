@@ -2,6 +2,7 @@ import { ensureBlindnessCurtain, setBlindnessMode } from "./overlays/blindness";
 import { setBlurAmount } from "./overlays/blur";
 import { applyCognitiveStyles } from "./overlays/cognitive";
 import { setCvdMode, type CvdMode } from "./overlays/cvd";
+import { setCaptionReminder, setPageMute } from "./overlays/hearing";
 
 export function setupMessageListener(): void {
   ensureBlindnessCurtain();
@@ -61,6 +62,20 @@ export function setupMessageListener(): void {
           jitter,
           density,
         });
+        sendResponse({ success: true });
+        break;
+      }
+
+      case "ACCESSLENS_SET_PAGE_MUTE": {
+        const mute = !message.payload?.isMuted;
+        setPageMute(mute);
+        sendResponse({ success: true });
+        break;
+      }
+
+      case "ACCESSLENS_SET_CAPTIONS_REMINDER": {
+        const showReminder = !!message.payload?.showCaptionsReminder;
+        setCaptionReminder(showReminder);
         sendResponse({ success: true });
         break;
       }

@@ -4,6 +4,7 @@ import BlindnessControls from "./BlindnessControls";
 import CVDControls from "./CVDControls";
 import CognitiveControls from "./CognitiveControls";
 import styles from "./AccessibilityControls.module.css";
+import HearingControls from "./HearingControls";
 
 type CvdMode =
   | "none"
@@ -22,6 +23,8 @@ export default function AccessibilityControls() {
   const [lineHeight, setLineHeight] = useState(1.5);
   const [jitterEnabled, setJitterEnabled] = useState(false);
   const [densityEnabled, setDensityEnabled] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showCaptionsReminder, setShowCaptionsReminder] = useState(false);
 
   // Load initial settings from storage
   useEffect(() => {
@@ -179,6 +182,30 @@ export default function AccessibilityControls() {
     });
   }, [letterSpacingPx, lineHeight, jitterEnabled, densityEnabled]);
 
+  //Mute
+  useEffect(() => {
+    if (chrome?.storage?.sync)
+      chrome.storage.sync.set({ isMuted }).catch?.(() => {});
+    sendToActiveTab({
+      type: "ACCESSLENS_SET_PAGE_MUTE",
+      payload: {
+        isMuted,
+      },
+    });
+  }, [isMuted]);
+
+  //Caption Reminder
+  useEffect(() => {
+    if (chrome?.storage?.sync)
+      chrome.storage.sync.set({ showCaptionsReminder }).catch?.(() => {});
+    sendToActiveTab({
+      type: "ACCESSLENS_SET_CAPTIONS_REMINDER",
+      payload: {
+        showCaptionsReminder,
+      },
+    });
+  }, [showCaptionsReminder]);
+
   return (
     <div className={styles.container}>
       <h1 className={styles.mainTitle}>Accessibility Controls</h1>
@@ -207,6 +234,13 @@ export default function AccessibilityControls() {
         onLineHeightChange={setLineHeight}
         onJitterChange={setJitterEnabled}
         onDensityChange={setDensityEnabled}
+      />
+
+      <HearingControls
+        isMuted={isMuted}
+        showCaptionsReminder={showCaptionsReminder}
+        onMutedChange={setIsMuted}
+        onCaptionsReminderChange={setShowCaptionsReminder}
       />
     </div>
   );
