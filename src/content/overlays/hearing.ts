@@ -66,7 +66,7 @@ function removeBannerFromVideo(video: HTMLVideoElement): void {
 function updateVideoBanners(enabled: boolean): void {
   if (!enabled) {
     // Remove all banners
-    videoBanners.forEach((banner, video) => {
+    videoBanners.forEach((_banner, video) => {
       removeBannerFromVideo(video);
     });
     return;

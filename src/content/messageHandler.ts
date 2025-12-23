@@ -7,7 +7,7 @@ import { setCaptionReminder, setPageMute } from "./overlays/hearing";
 export function setupMessageListener(): void {
   ensureBlindnessCurtain();
 
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     switch (message.type) {
       case "ACCESSLENS_SET_BLUR": {
         const blurPx =
